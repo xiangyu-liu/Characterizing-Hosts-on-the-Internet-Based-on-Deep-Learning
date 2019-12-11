@@ -8,7 +8,7 @@ import numpy as np
 
 
 def main(args):
-    data = scipy.sparse.load_npz(r"C:\Users\11818\Desktop\misc\CSR_test.npz").A
+    data = scipy.sparse.load_npz(r"/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_test.npz").A
     data = vae.Dataset(data, batch_size=args.batch_size)
     with open(os.path.join(args.path, "model.pkl"), 'rb') as f:
         model = dill.load(f)
@@ -23,6 +23,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='VAE Evaluation')
 
     parser.add_argument("--path", type=str)
+    parser.add_argument("--hidden_units", default=1000, type=int)
     parser.add_argument("--batch_size", default=1000, type=int)
 
     args = parser.parse_args()

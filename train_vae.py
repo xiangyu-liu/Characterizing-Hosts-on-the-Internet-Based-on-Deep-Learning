@@ -5,11 +5,11 @@ import vae
 import tensorflow as tf
 import numpy as np
 import argparse
-import scipy
+import scipy.sparse
 
 
 def main(args):
-    model_dir = Path('./log') / str(args.n_latent) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
+    model_dir = Path('./log') / (str(args.n_latent)+str(args.hidden_units)) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
                                                                                                          args.batch_size,
                                                                                                          args.n_samples,
                                                                                                          args.lr)
@@ -26,8 +26,9 @@ def main(args):
     curr_run = 'run%i' % run_num
     log_dir = model_dir / curr_run
     os.makedirs(log_dir)
+    print("making directory", str(log_dir))
 
-    data = scipy.sparse.load_npz(r"C:\Users\11818\Desktop\misc\CSR_test.npz").A
+    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_test.npz").A
     validation = np.random.choice(data.shape[0], size=1000)
     train = [i for i in range(data.shape[0]) if not (i in validation)]
     train_data = data[train]
@@ -38,8 +39,8 @@ def main(args):
     model = vae.VAE(
         n_inputs=data.shape[1],
         n_latent=args.n_latent,
-        n_encoder=[1000, 1000],
-        n_decoder=[1000, 1000],
+        n_encoder=[args.hidden_units, args.hidden_units],
+        n_decoder=[args.hidden_units, args.hidden_units],
         visible_type='binary',
         nonlinearity=tf.nn.relu,
         weight_normalization=args.not_weight_normalization,
@@ -49,7 +50,7 @@ def main(args):
         model_dir=str(log_dir)
     )
 
-    with open('log/model.pkl', 'wb') as f:
+    with open(log_dir/"model.pkl", 'wb') as f:
         dill.dump(model, f)
     print("begin to fit")
 
@@ -69,12 +70,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='VAE Training')
 
     parser.add_argument("--n_latent", default=2, type=int)
+    parser.add_argument("--hidden_units", default=1000, type=int)
     parser.add_argument("--importance_weighting", default=False, action="store_true")
     parser.add_argument("--not_weight_normalization", default=True, action="store_false")
 
+
     parser.add_argument("--batch_size", default=1000, type=int)
     parser.add_argument("--n_samples", default=10, type=int)
-    parser.add_argument("--epochs", default=10, type=int)
+    parser.add_argument("--epochs", default=100, type=int)
     parser.add_argument("--lr", default=0.001, type=float)
     parser.add_argument("--optimizer", default="Adam", type=str)
     parser.add_argument("--not_shuffle", default=True, action="store_false")
