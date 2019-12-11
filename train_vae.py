@@ -5,9 +5,16 @@ import numpy as np
 import argparse
 import scipy
 
+
 def main(args):
     data = scipy.sparse.load_npz(r"C:\Users\11818\Desktop\misc\CSR_test.npz").A
-    train_data = vae.Dataset(data, batch_size=args.batch_size)
+    validation = np.random.choice(data.shape[0], size=1000)
+    train = [i for i in range(data.shape[0]) if not (i in validation)]
+    train_data = data[train]
+    validation_data = data[validation]
+    train_data = vae.Dataset(train_data, batch_size=args.batch_size)
+    validation_data = vae.Dataset(validation_data, batch_size=args.batch_size)
+
     model = vae.VAE(
         n_inputs=data.shape[1],
         n_latent=args.n_latent,
@@ -24,6 +31,7 @@ def main(args):
 
     with open('vae/model.pkl', 'wb') as f:
         dill.dump(model, f)
+    print("begin to fit")
 
     model.fit(
         train_data,
