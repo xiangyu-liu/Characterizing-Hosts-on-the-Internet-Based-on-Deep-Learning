@@ -1,4 +1,6 @@
 import dill
+from pathlib import Path
+import os
 import vae
 import tensorflow as tf
 import numpy as np
@@ -7,6 +9,24 @@ import scipy
 
 
 def main(args):
+    model_dir = Path('./log') / str(args.n_latent) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
+                                                                                                         args.batch_size,
+                                                                                                         args.n_samples,
+                                                                                                         args.lr)
+    if not model_dir.exists():
+        run_num = 1
+    else:
+        exst_run_nums = [int(str(folder.name).split('run')[1]) for folder in
+                         model_dir.iterdir() if
+                         str(folder.name).startswith('run')]
+        if len(exst_run_nums) == 0:
+            run_num = 1
+        else:
+            run_num = max(exst_run_nums) + 1
+    curr_run = 'run%i' % run_num
+    log_dir = model_dir / curr_run
+    os.makedirs(log_dir)
+
     data = scipy.sparse.load_npz(r"C:\Users\11818\Desktop\misc\CSR_test.npz").A
     validation = np.random.choice(data.shape[0], size=1000)
     train = [i for i in range(data.shape[0]) if not (i in validation)]
@@ -26,10 +46,10 @@ def main(args):
         importance_weighting=args.importance_weighting,
         optimizer=args.optimizer,
         learning_rate=args.lr,
-        model_dir='vae'
+        model_dir=str(log_dir)
     )
 
-    with open('vae/model.pkl', 'wb') as f:
+    with open('log/model.pkl', 'wb') as f:
         dill.dump(model, f)
     print("begin to fit")
 
