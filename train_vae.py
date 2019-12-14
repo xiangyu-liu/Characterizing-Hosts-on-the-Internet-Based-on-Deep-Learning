@@ -9,7 +9,7 @@ import scipy.sparse
 
 
 def main(args):
-    model_dir = Path('./log') / (str(args.n_latent)+str(args.hidden_units)) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
+    model_dir = Path('./log') / (str(args.n_latent) + "-" + str(args.hidden_units)) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
                                                                                                          args.batch_size,
                                                                                                          args.n_samples,
                                                                                                          args.lr)
@@ -28,7 +28,10 @@ def main(args):
     os.makedirs(log_dir)
     print("making directory", str(log_dir))
 
-    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_test.npz").A
+    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_no_blacklist.1.1.npz").A
+    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_blacklist.1.0.npz").A
+    data = np.concatenate([data, data_blacklist], axis=0)
+    print(data.shape)
     validation = np.random.choice(data.shape[0], size=1000)
     train = [i for i in range(data.shape[0]) if not (i in validation)]
     train_data = data[train]
@@ -69,7 +72,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='VAE Training')
 
-    parser.add_argument("--n_latent", default=2, type=int)
+    parser.add_argument("--n_latent", default=50, type=int)
     parser.add_argument("--hidden_units", default=1000, type=int)
     parser.add_argument("--importance_weighting", default=False, action="store_true")
     parser.add_argument("--not_weight_normalization", default=True, action="store_false")
@@ -77,7 +80,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--batch_size", default=1000, type=int)
     parser.add_argument("--n_samples", default=10, type=int)
-    parser.add_argument("--epochs", default=100, type=int)
+    parser.add_argument("--epochs", default=1000, type=int)
     parser.add_argument("--lr", default=0.001, type=float)
     parser.add_argument("--optimizer", default="Adam", type=str)
     parser.add_argument("--not_shuffle", default=True, action="store_false")
