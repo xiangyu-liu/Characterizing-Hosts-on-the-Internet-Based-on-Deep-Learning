@@ -9,7 +9,7 @@ import scipy.sparse
 
 
 def main(args):
-    model_dir = Path('./log') / (str(args.n_latent) + "-" + str(args.hidden_units)) / "epochs={} batch_size={} n_samples={} lr={}".format(args.epochs,
+    model_dir = Path('./log') / "{}-{}-{}-{}".format(args.n_latent, args.hidden_units, args.importance_weighting, args.not_weight_normalization) / "epochs={}-batch_size={}-n_samples={}-lr={}".format(args.epochs,
                                                                                                          args.batch_size,
                                                                                                          args.n_samples,
                                                                                                          args.lr)
@@ -28,8 +28,8 @@ def main(args):
     os.makedirs(log_dir)
     print("making directory", str(log_dir))
 
-    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_no_blacklist.1.1.npz").A
-    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_blacklist.1.0.npz").A
+    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_no_black_5.1.npz").A
+    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_blacklist_5.1.npz").A
     data = np.concatenate([data, data_blacklist], axis=0)
     print(data.shape)
     validation = np.random.choice(data.shape[0], size=1000)
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument("--lr", default=0.001, type=float)
     parser.add_argument("--optimizer", default="Adam", type=str)
     parser.add_argument("--not_shuffle", default=True, action="store_false")
-    parser.add_argument("--summary_steps", default=100, type=int)
+    parser.add_argument("--summary_steps", default=200, type=int)
 
     args = parser.parse_args()
     main(args)

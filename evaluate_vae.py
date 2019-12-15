@@ -13,7 +13,7 @@ def main(args):
         model = dill.load(f)
     print("begin to evaluate")
 
-    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_no_blacklist.1.1.npz").A
+    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_no_black_5.1.npz").A
     data = vae.Dataset(data, batch_size=args.batch_size)
     Z_mean, Z_sd = model.evaluate(data, tensors=['z_mean', 'z_sd'])
     Z_mean = np.concatenate(Z_mean, axis=0).reshape(shape=(-1, Z_mean[0].shape[0]))
@@ -21,7 +21,7 @@ def main(args):
     np.save(os.path.join(args.path, "mean.npy"), Z_mean)
     np.save(os.path.join(args.path, "sd.npy"), Z_sd)
 
-    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_blacklist.1.0.npz").A
+    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_blacklist_5.1.npz").A
     data_blacklist = vae.Dataset(data_blacklist, batch_size=args.batch_size)
     Z_mean, Z_sd = model.evaluate(data_blacklist, tensors=['z_mean', 'z_sd'])
     Z_mean = np.concatenate(Z_mean, axis=0).reshape(shape=(-1, Z_mean[0].shape[0]))
