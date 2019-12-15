@@ -8,8 +8,8 @@ import numpy as np
 
 
 def main(args):
-    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_no_blacklist.1.1.npz").A
-    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/CSR_blacklist.1.0.npz").A
+    data = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_no_black_5.1.npz").A
+    data_blacklist = scipy.sparse.load_npz("/newNAS/Workspaces/DRLGroup/xiangyuliu/data_blacklist_5.1.npz").A
     data = np.concatenate([data, data_blacklist], axis=0)
     data = vae.Dataset(data, batch_size=args.batch_size)
     args.path = "/newNAS/Workspaces/DRLGroup/xiangyuliu/Computer-Network/log/501000/epochs=100 batch_size=1000 n_samples=10 lr=0.001/run4/"
