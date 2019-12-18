@@ -27,6 +27,7 @@ def domain2ip(domain):
     result = socket.gethostbyname(domain)
     return result
 
+
 num = 0
 
 
@@ -64,32 +65,37 @@ def get_black_ip_set(file):
 file_count = 0
 
 
-def main(black_ip_list):
-    def fetch_json(ip):
-        global file_count
-        file_count += 1
+def fetch_json(ip, store=True, url_direct=False):
+    global file_count
+    file_count += 1
+    if url_direct:
+        url = "https://censys.io/domain/" + ip + "/raw"
+    else:
         url = "https://censys.io/ipv4/" + ip + "/raw"
-        print(file_count, ip)
 
-        def fetch_dict():
-            try:
-                contents = TargetContents(url=url)
-                return contents.soup.find_all("code")
-            except:
-                print("error")
-                return []
+    def fetch_dict():
+        try:
+            contents = TargetContents(url=url)
+            return contents.soup.find_all("code")
+        except:
+            print("censys does not contain this ip")
+            return []
 
-        while True:
-            parsed_html = fetch_dict()
-            if len(parsed_html) != 0:
-                break
-            else:
-                print("looping")
+    while True:
+        parsed_html = fetch_dict()
+        if len(parsed_html) != 0:
+            break
+        else:
+            print("looping")
 
-        for parsed_text in parsed_html:
-            ip_dict = json.loads(parsed_text.get_text())
+    for parsed_text in parsed_html:
+        ip_dict = json.loads(parsed_text.get_text())
+        if store:
             json.dump(ip_dict, open(log_path + ip + ".json", mode="w"))
+    return ip_dict
 
+
+def main(black_ip_list):
     cores = multiprocessing.cpu_count()
     print(cores)
     pool = Pool(processes=cores)
@@ -111,11 +117,12 @@ def run_domain2ip():
     i = -1
     for file_path in black_list_path:
         i += 1
-        if i<= 3:
+        if i <= 3:
             continue
         ip_list = get_black_ip_set(file_path)
         pickle.dump(ip_list, open(ip_path + str(i) + ".pkl", mode='wb+'))
         print(len(ip_list), file_path, "finish:" + str(i))
+
 
 if __name__ == '__main__':
     run_scrapy()

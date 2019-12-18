@@ -9,10 +9,12 @@ import scipy.sparse
 
 
 def main(args):
-    model_dir = Path('./log') / "{}-{}-{}-{}".format(args.n_latent, args.hidden_units, args.importance_weighting, args.not_weight_normalization) / "epochs={}-batch_size={}-n_samples={}-lr={}".format(args.epochs,
-                                                                                                         args.batch_size,
-                                                                                                         args.n_samples,
-                                                                                                         args.lr)
+    model_dir = Path('./log') / "{}-{}-{}-{}".format(args.n_latent, args.hidden_units, args.importance_weighting,
+                                                     args.not_weight_normalization) / "epochs={}-batch_size={}-n_samples={}-lr={}".format(
+        args.epochs,
+        args.batch_size,
+        args.n_samples,
+        args.lr)
     if not model_dir.exists():
         run_num = 1
     else:
@@ -43,21 +45,21 @@ def main(args):
     with open(os.path.join(model_path, "model.pkl"), 'rb') as f:
         model = dill.load(f)
 
-    # model = vae.VAE(
-    #     n_inputs=data.shape[1],
-    #     n_latent=args.n_latent,
-    #     n_encoder=[args.hidden_units, args.hidden_units],
-    #     n_decoder=[args.hidden_units, args.hidden_units],
-    #     visible_type='binary',
-    #     nonlinearity=tf.nn.relu,
-    #     weight_normalization=args.not_weight_normalization,
-    #     importance_weighting=args.importance_weighting,
-    #     optimizer=args.optimizer,
-    #     learning_rate=args.lr,
-    #     model_dir=str(log_dir)
-    # )
+    model = vae.VAE(
+        n_inputs=data.shape[1],
+        n_latent=args.n_latent,
+        n_encoder=[args.hidden_units, args.hidden_units],
+        n_decoder=[args.hidden_units, args.hidden_units],
+        visible_type='binary',
+        nonlinearity=tf.nn.relu,
+        weight_normalization=args.not_weight_normalization,
+        importance_weighting=args.importance_weighting,
+        optimizer=args.optimizer,
+        learning_rate=args.lr,
+        model_dir=str(log_dir)
+    )
 
-    with open(log_dir/"model.pkl", 'wb') as f:
+    with open(log_dir / "model.pkl", 'wb') as f:
         dill.dump(model, f)
     print("begin to fit")
 
@@ -80,7 +82,6 @@ if __name__ == '__main__':
     parser.add_argument("--hidden_units", default=1000, type=int)
     parser.add_argument("--importance_weighting", default=False, action="store_true")
     parser.add_argument("--not_weight_normalization", default=True, action="store_false")
-
 
     parser.add_argument("--batch_size", default=1000, type=int)
     parser.add_argument("--n_samples", default=10, type=int)

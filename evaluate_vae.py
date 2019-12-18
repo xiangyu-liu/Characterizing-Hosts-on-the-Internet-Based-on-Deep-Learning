@@ -37,6 +37,7 @@ def main(args):
     # np.save(os.path.join(args.path, "only80_mean.npy"), Z_mean)
     # np.save(os.path.join(args.path, "only80_sd.npy"), Z_sd)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='VAE Evaluation')
 
