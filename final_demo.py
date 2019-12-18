@@ -40,7 +40,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='demo')
     parser.add_argument("--search_input", default="url", type=str)
-    parser.add_argument("--url", default="tmall.com", type=str)
+    parser.add_argument("--url", default="baidu.com", type=str)
     parser.add_argument("--ip", default=None, type=str)
     parser.add_argument("--demo", default="demo2", type=str)
     parser.add_argument("--load_json", default=False, action="store_true")

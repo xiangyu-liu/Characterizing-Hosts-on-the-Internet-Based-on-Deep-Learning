@@ -22,7 +22,8 @@ def demo2_low(content_dict):
         'num_class': 15,
         'nthread': 4
     }
-
+    token_dict = ["10", "15", "16", "apache", "centos", "httpapi", "iis", "lighttpd", "microsoft", "nginx", "openssl",
+                  "php", "server", "ubuntu", "webs"]
     model = xgboost.Booster({'nthread': 4})  # 初始化模型
     model.load_model(r"C:\Users\11818\Desktop\RL\Code\vae\app2_low\model_8003")  # 加载已存储的模型
 
@@ -95,6 +96,6 @@ def demo2_low(content_dict):
     preds = preds.reshape(-1, 1)
     print("###begin to test low embedding###")
     try:
-        print("prediction is {} label is {}".format(int(preds[0, 0]), Y_test[0, 0]))
+        print("prediction is {}; label is {}; token is {}".format(int(preds[0, 0]), Y_test[0, 0], token_dict[Y_test[0, 0]]))
     except:
         print("we cannot predict such a model")

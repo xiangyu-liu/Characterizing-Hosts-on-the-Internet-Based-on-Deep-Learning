@@ -60,7 +60,7 @@ def demo2_high(content_dict):
     preds = model.predict(dtest)
     print("###begin to test high embedding###")
     try:
-        print("prediction is {} label is {} token is {}".format(int(preds[0]), Y_test[0, 0], token_dict[Y_test[0, 0]]))
+        print("prediction is {}; label is {}; token is {}".format(int(preds[0]), Y_test[0, 0], token_dict[Y_test[0, 0]]))
     except:
         print("we cannot predict such a label")
     # 得到的preds就是预测的server
