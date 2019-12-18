@@ -39,19 +39,23 @@ def main(args):
     train_data = vae.Dataset(train_data, batch_size=args.batch_size)
     validation_data = vae.Dataset(validation_data, batch_size=args.batch_size)
 
-    model = vae.VAE(
-        n_inputs=data.shape[1],
-        n_latent=args.n_latent,
-        n_encoder=[args.hidden_units, args.hidden_units],
-        n_decoder=[args.hidden_units, args.hidden_units],
-        visible_type='binary',
-        nonlinearity=tf.nn.relu,
-        weight_normalization=args.not_weight_normalization,
-        importance_weighting=args.importance_weighting,
-        optimizer=args.optimizer,
-        learning_rate=args.lr,
-        model_dir=str(log_dir)
-    )
+    model_path = "/newNAS/Workspaces/DRLGroup/xiangyuliu/Computer-Network/log/50-1000-True-True/epochs=1000 batch_size=1000 n_samples=10 lr=0.001/run1"
+    with open(os.path.join(model_path, "model.pkl"), 'rb') as f:
+        model = dill.load(f)
+
+    # model = vae.VAE(
+    #     n_inputs=data.shape[1],
+    #     n_latent=args.n_latent,
+    #     n_encoder=[args.hidden_units, args.hidden_units],
+    #     n_decoder=[args.hidden_units, args.hidden_units],
+    #     visible_type='binary',
+    #     nonlinearity=tf.nn.relu,
+    #     weight_normalization=args.not_weight_normalization,
+    #     importance_weighting=args.importance_weighting,
+    #     optimizer=args.optimizer,
+    #     learning_rate=args.lr,
+    #     model_dir=str(log_dir)
+    # )
 
     with open(log_dir/"model.pkl", 'wb') as f:
         dill.dump(model, f)
