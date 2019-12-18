@@ -28,14 +28,10 @@ def main(args):
             content_dict = fetch_json(args.url, store=False, url_direct=True)
 
     if "demo1" in args.demo:
-        print("###begin test high embedding###")
         demo1_highdim(content_dict)
-        print("###begin to test low embedding###")
         demo1_lowdim(content_dict)
     elif "demo2" in args.demo:
-        print("###begin test high embedding###")
         demo2_high(content_dict)
-        print("###begin to test low embedding###")
         demo2_low(content_dict)
     else:
         print("no such demo")
@@ -44,7 +40,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='demo')
     parser.add_argument("--search_input", default="url", type=str)
-    parser.add_argument("--url", default="google.com", type=str)
+    parser.add_argument("--url", default="tmall.com", type=str)
     parser.add_argument("--ip", default=None, type=str)
     parser.add_argument("--demo", default="demo2", type=str)
     parser.add_argument("--load_json", default=False, action="store_true")

@@ -58,6 +58,7 @@ def demo2_high(content_dict):
     dtest = xgboost.DMatrix(X_test, label=Y_test)
     data = xgboost.DMatrix(X_test)
     preds = model.predict(dtest)
+    print("###begin to test high embedding###")
     try:
         print("prediction is {} label is {} token is {}".format(int(preds[0]), Y_test[0, 0], token_dict[Y_test[0, 0]]))
     except:

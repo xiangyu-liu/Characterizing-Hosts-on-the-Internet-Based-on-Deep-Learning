@@ -93,4 +93,8 @@ def demo2_low(content_dict):
     dtest = xgboost.DMatrix(X_test, label=Y_test)
     preds = model.predict(dtest)
     preds = preds.reshape(-1, 1)
-    print("prediction is {} label is {}".format(int(preds[0, 0]), Y_test[0, 0]))
+    print("###begin to test low embedding###")
+    try:
+        print("prediction is {} label is {}".format(int(preds[0, 0]), Y_test[0, 0]))
+    except:
+        print("we cannot predict such a model")

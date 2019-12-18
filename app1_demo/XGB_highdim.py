@@ -16,6 +16,7 @@ def demo1_highdim(content_dict):
     # 对测试集进行预测
     X = xgboost.DMatrix(X)
     prediction = model.predict(X)[0]  # 返回：坏主机的概率
+    print("###begin test high embedding###")
     print("Pr[Bad guy] = %.2f" % prediction)
     if prediction >= 0.9:
         print("Beware of this host!")
