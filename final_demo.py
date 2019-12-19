@@ -2,10 +2,8 @@ import argparse
 import json
 from ScrapyCensys import domain2ip
 from ScrapyCensys import fetch_json
-from app1_demo.XGB_highdim import demo1_highdim
-from app1_demo.XGB_lowdim import demo1_lowdim
-from app2_high.demo3 import demo2_high
-from app2_low.demo import demo2_low
+from app1_demo.XGB_lowdim import demo1_lowdim, demo1_highdim
+from app2_low.demo import demo2_low, demo2_high
 
 
 def main(args):
@@ -40,7 +38,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='demo')
-    parser.add_argument("--search_input", default="ip", type=str)
+    parser.add_argument("--search_input", default="url", type=str)
     parser.add_argument("--url", default="baidu.com", type=str)
     parser.add_argument("--ip", default="172.105.237.241", type=str)
     parser.add_argument("--demo", default="demo1", type=str)
