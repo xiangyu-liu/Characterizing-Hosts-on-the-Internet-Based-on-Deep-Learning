@@ -9,24 +9,25 @@ from app2_low.demo import demo2_low
 
 
 def main(args):
-    if args.ip == None:
-        try:
-            ip = domain2ip(args.url)
-        except:
-            print("url error")
-            return
-    else:
-        ip = args.ip
-    print("url is {} ip address is {}".format(args.url, ip))
-
+    ip = args.ip
+    content_dict = []
     if args.load_json:
-        content_dict = json.load(open(r"C:\Users\11818\Desktop\RL\Code\vae\data.json"))
+        # content_dict = json.load(open(r"C:\Users\11818\Desktop\RL\Code\vae\data.json"))
+        with open(r"C:\Users\11818\Desktop\RL\Code\vae\data.json") as f:
+            for line in f.readlines():
+                content_dict.append(json.loads(line))
     else:
         if args.search_input == "ip":
-            content_dict = fetch_json(ip, store=False, url_direct=False)
+            if ip == None:
+                try:
+                    ip = domain2ip(args.url)
+                except:
+                    print("url error")
+                    return
+            content_dict.append(fetch_json(ip, store=False, url_direct=False))
         else:
-            content_dict = fetch_json(args.url, store=False, url_direct=True)
-
+            content_dict.append(fetch_json(args.url, store=False, url_direct=True))
+    print("url is {} ip address is {}".format(args.url, ip))
     if "demo1" in args.demo:
         demo1_highdim(content_dict)
         demo1_lowdim(content_dict)
@@ -39,10 +40,10 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='demo')
-    parser.add_argument("--search_input", default="url", type=str)
+    parser.add_argument("--search_input", default="ip", type=str)
     parser.add_argument("--url", default="baidu.com", type=str)
-    parser.add_argument("--ip", default=None, type=str)
-    parser.add_argument("--demo", default="demo2", type=str)
+    parser.add_argument("--ip", default="172.105.237.241", type=str)
+    parser.add_argument("--demo", default="demo1", type=str)
     parser.add_argument("--load_json", default=False, action="store_true")
     args = parser.parse_args()
     main(args)

@@ -11,7 +11,7 @@ def demo1_highdim(content_dict):
     with open(r"C:\Users\11818\Desktop\RL\Code\vae\app1_demo\vectorizer.pkl", "rb") as f:
         vectorizer = pickle.load(f)
 
-    X = vectorizer.transform([content_dict,])  # 生成高维向量
+    X = vectorizer.transform(content_dict)  # 生成高维向量
 
     # 对测试集进行预测
     X = xgboost.DMatrix(X)

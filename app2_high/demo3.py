@@ -33,7 +33,7 @@ def demo2_high(content_dict):
     with open(r"C:\Users\11818\Desktop\RL\Code\vae\app1_demo\vectorizer.pkl", "rb") as f:
         vectorizer = pickle.load(f)
 
-    X_test = vectorizer.transform([content_dict, ])
+    X_test = vectorizer.transform(content_dict)
     X = X_test
     X = np.array(X.todense())
     mask = np.ones((5987,))
@@ -59,8 +59,15 @@ def demo2_high(content_dict):
     data = xgboost.DMatrix(X_test)
     preds = model.predict(dtest)
     print("###begin to test high embedding###")
-    try:
-        print("prediction is {}; label is {}; token is {}".format(int(preds[0]), Y_test[0, 0], token_dict[Y_test[0, 0]]))
-    except:
-        print("we cannot predict such a label")
-    # 得到的preds就是预测的server
+    for i in range(len(content_dict)):
+        try:
+            print("prediction is {}; label is {}; token is {}".format(int(preds[i]), Y_test[i, 0],
+                                                                      token_dict[Y_test[i, 0]]))
+        except:
+            print("we cannot predict such a label")
+
+    error_rate = np.sum(preds != Y_test) * 1.0 / Y_test.shape[0]
+    acc_of_test = 1 - error_rate
+    print('Test error using softmax = {}'.format(error_rate))
+    print('Test ACC = {}'.format(acc_of_test))
+
